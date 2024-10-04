@@ -61,6 +61,7 @@ async function getFavicon() {
 // }
 
 async function getDownloadFaviconBtn() {
+  const divResult = document.getElementById("result");
   if (!currentFaviconUrl) {
     alert("Veuillez d'abord récupérer un favicon");
     return;
@@ -68,11 +69,12 @@ async function getDownloadFaviconBtn() {
 
   // Créer un élément <a> pour forcer le téléchargement
   const a = document.createElement("a");
+  a.innerText = "Télécharger le Favicon";
   a.href = currentFaviconUrl;
   a.download = "favicon.png"; // Nom du fichier à télécharger
-  document.body.appendChild(a);
+  document.divResult.appendChild(a);
   a.click();
-  document.body.removeChild(a); // Supprimer l'élément après le clic
+  document.divResult.removeChild(a); // Supprimer l'élément après le clic
 }
 
 async function reset() {
