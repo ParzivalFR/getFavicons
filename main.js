@@ -26,39 +26,39 @@ async function getFavicon() {
     `;
 }
 
-async function downloadFavicon() {
-  if (!currentFaviconUrl) {
-    alert("Veuillez d'abord récupérer un favicon");
-    return;
-  }
+// async function downloadFavicon() {
+//   if (!currentFaviconUrl) {
+//     alert("Veuillez d'abord récupérer un favicon");
+//     return;
+//   }
 
-  const img = new Image();
-  img.crossOrigin = "anonymous"; // Important pour contourner certaines restrictions CORS
-  img.src = currentFaviconUrl;
+//   const img = new Image();
+//   img.crossOrigin = "anonymous"; // Important pour contourner certaines restrictions CORS
+//   img.src = currentFaviconUrl;
 
-  img.onload = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+//   img.onload = () => {
+//     const canvas = document.createElement("canvas");
+//     canvas.width = img.width;
+//     canvas.height = img.height;
+//     const ctx = canvas.getContext("2d");
+//     ctx.drawImage(img, 0, 0);
 
-    canvas.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.style.display = "none";
-      a.href = url;
-      a.download = "favicon.png";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    }, "image/png");
-  };
+//     canvas.toBlob((blob) => {
+//       const url = URL.createObjectURL(blob);
+//       const a = document.createElement("a");
+//       a.style.display = "none";
+//       a.href = url;
+//       a.download = "favicon.png";
+//       document.body.appendChild(a);
+//       a.click();
+//       window.URL.revokeObjectURL(url);
+//     }, "image/png");
+//   };
 
-  img.onerror = () => {
-    alert("Erreur lors du téléchargement de l'image.");
-  };
-}
+//   img.onerror = () => {
+//     alert("Erreur lors du téléchargement de l'image.");
+//   };
+// }
 
 async function getDownloadFaviconBtn() {
   if (!currentFaviconUrl) {
