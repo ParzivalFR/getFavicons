@@ -36,12 +36,29 @@ async function downloadFavicon() {
 
   try {
     const response = await fetch(currentFaviconUrl);
+    const contentType = response.headers.get("content-type");
     const blob = await response.blob();
+
+    let extension = "ico"; // Extension par défaut
+    if (contentType.includes("png")) {
+      extension = "png";
+    } else if (contentType.includes("jpeg") || contentType.includes("jpg")) {
+      extension = "jpg";
+    } else if (contentType.includes("svg")) {
+      extension = "svg";
+    } else if (contentType.includes("gif")) {
+      extension = "gif";
+    } else if (contentType.includes("x-icon")) {
+      extension = "ico";
+    } else if (contentType.includes("webp")) {
+      extension = "webp";
+    }
+
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
-    a.download = "favicon.png";
+    a.download = `favicon.${extension}`;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
