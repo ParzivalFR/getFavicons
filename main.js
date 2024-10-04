@@ -19,62 +19,35 @@ async function getFavicon() {
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
-        <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
+        <img src="${currentFaviconUrl}" alt="Favicon">
         <div class="result-infos">
-          <a href="${currentFaviconUrl}" download="favicon.png" target="_blank">Télécharger le Favicon</a>
+          <a href="${currentFaviconUrl}" target="_blank">${currentFaviconUrl}</a>
         </div>
+        <button onclick="downloadFavicon()" class="download-btn">Télécharger le Favicon</button>
     `;
 }
 
-// async function downloadFavicon() {
-//   if (!currentFaviconUrl) {
-//     alert("Veuillez d'abord récupérer un favicon");
-//     return;
-//   }
-
-//   const img = new Image();
-//   img.crossOrigin = "anonymous"; // Important pour contourner certaines restrictions CORS
-//   img.src = currentFaviconUrl;
-
-//   img.onload = () => {
-//     const canvas = document.createElement("canvas");
-//     canvas.width = img.width;
-//     canvas.height = img.height;
-//     const ctx = canvas.getContext("2d");
-//     ctx.drawImage(img, 0, 0);
-
-//     canvas.toBlob((blob) => {
-//       const url = URL.createObjectURL(blob);
-//       const a = document.createElement("a");
-//       a.style.display = "none";
-//       a.href = url;
-//       a.download = "favicon.png";
-//       document.body.appendChild(a);
-//       a.click();
-//       window.URL.revokeObjectURL(url);
-//     }, "image/png");
-//   };
-
-//   img.onerror = () => {
-//     alert("Erreur lors du téléchargement de l'image.");
-//   };
-// }
-
-async function getDownloadFaviconBtn() {
-  const divResult = document.getElementById("result");
+async function downloadFavicon() {
   if (!currentFaviconUrl) {
     alert("Veuillez d'abord récupérer un favicon");
     return;
   }
 
-  // Créer un élément <a> pour forcer le téléchargement
-  const a = document.createElement("a");
-  a.innerText = "Télécharger le Favicon";
-  a.href = currentFaviconUrl;
-  a.download = "favicon.png"; // Nom du fichier à télécharger
-  document.divResult.appendChild(a);
-  a.click();
-  document.divResult.removeChild(a); // Supprimer l'élément après le clic
+  try {
+    const response = await fetch(currentFaviconUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "favicon.png";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("Erreur lors du téléchargement du favicon");
+    console.error("Erreur:", error);
+  }
 }
 
 async function reset() {
