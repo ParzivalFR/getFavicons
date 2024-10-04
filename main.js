@@ -13,8 +13,7 @@ async function getFavicon() {
     return;
   }
 
-  // Utiliser un proxy pour contourner les restrictions CORS
-  currentFaviconUrl = `https://cors-anywhere.herokuapp.com/https://www.google.com/s2/favicons?domain=${encodeURIComponent(
+  currentFaviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
     url
   )}&sz=64`;
 
@@ -22,27 +21,21 @@ async function getFavicon() {
   resultDiv.innerHTML = `
         <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
         <div class="result-infos">
-          <a href="${currentFaviconUrl}" target="_blank">${currentFaviconUrl}</a>
+          <a href="${currentFaviconUrl}" download="favicon.png" target="_blank">Télécharger le Favicon</a>
         </div>
-        <button onclick="downloadFavicon()" class="download-btn">Télécharger le Favicon</button>
     `;
 }
 
-function downloadFavicon() {
+async function downloadFavicon() {
   if (!currentFaviconUrl) {
     alert("Veuillez d'abord récupérer un favicon");
     return;
   }
 
-  const img = document.getElementById("faviconImage");
-  const canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, img.width, img.height);
-
-  canvas.toBlob((blob) => {
-    const url = URL.createObjectURL(blob);
+  try {
+    const response = await fetch(currentFaviconUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
@@ -50,10 +43,13 @@ function downloadFavicon() {
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
-  }, "image/png");
+  } catch (error) {
+    alert("Erreur lors du téléchargement du favicon");
+    console.error("Erreur:", error);
+  }
 }
 
-function reset() {
+async function reset() {
   document.getElementById("result").innerHTML = "";
   currentFaviconUrl = "";
 }
