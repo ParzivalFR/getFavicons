@@ -13,15 +13,16 @@ async function getFavicon() {
     return;
   }
 
-  currentFaviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
+  const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
     url
   )}&sz=64`;
+  currentFaviconUrl = `https://cors-anywhere.herokuapp.com/${faviconUrl}`;
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
     <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
     <div class="result-infos">
-      <a href="${currentFaviconUrl}" target="_blank">${currentFaviconUrl}</a>
+      <a href="${faviconUrl}" target="_blank">${faviconUrl}</a>
     </div>
     <button onclick="downloadFavicon()" class="download-btn">Télécharger le Favicon</button>
   `;
