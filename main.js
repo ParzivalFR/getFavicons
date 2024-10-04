@@ -16,11 +16,13 @@ async function getFavicon() {
   const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
     url
   )}&sz=64`;
-  currentFaviconUrl = `https://cors-anywhere.herokuapp.com/${faviconUrl}`;
+  currentFaviconUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+    faviconUrl
+  )}`;
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
-    <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
+    <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage" crossorigin="anonymous">
     <div class="result-infos">
       <a href="${faviconUrl}" target="_blank">${faviconUrl}</a>
     </div>
@@ -36,7 +38,10 @@ async function downloadFavicon() {
 
   try {
     const response = await fetch(currentFaviconUrl);
-    const contentType = response.headers.get("content-type");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const contentType = response.headers.get("content-type") || "";
     const blob = await response.blob();
 
     let extension = "ico"; // Extension par défaut
