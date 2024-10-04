@@ -26,7 +26,7 @@ async function getFavicon() {
     `;
 }
 
-function downloadFavicon() {
+async function downloadFavicon() {
   if (!currentFaviconUrl) {
     alert("Veuillez d'abord récupérer un favicon");
     return;
@@ -58,6 +58,21 @@ function downloadFavicon() {
   img.onerror = () => {
     alert("Erreur lors du téléchargement de l'image.");
   };
+}
+
+async function getDownloadFaviconBtn() {
+  if (!currentFaviconUrl) {
+    alert("Veuillez d'abord récupérer un favicon");
+    return;
+  }
+
+  // Créer un élément <a> pour forcer le téléchargement
+  const a = document.createElement("a");
+  a.href = currentFaviconUrl;
+  a.download = "favicon.png"; // Nom du fichier à télécharger
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a); // Supprimer l'élément après le clic
 }
 
 async function reset() {
