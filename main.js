@@ -13,18 +13,19 @@ async function getFavicon() {
     return;
   }
 
-  currentFaviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
+  const faviconUrl = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
     url
   )}&sz=64`;
+  currentFaviconUrl = `https://cors-anywhere.herokuapp.com/${faviconUrl}`;
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
-        <img src="${currentFaviconUrl}" alt="Favicon">
-        <div class="result-infos">
-          <a href="${currentFaviconUrl}" target="_blank">${currentFaviconUrl}</a>
-        </div>
-        <button onclick="downloadFavicon()" class="download-btn">Télécharger le Favicon</button>
-    `;
+    <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
+    <div class="result-infos">
+      <a href="${faviconUrl}" target="_blank">${faviconUrl}</a>
+    </div>
+    <button onclick="downloadFavicon()" class="download-btn">Télécharger le Favicon</button>
+  `;
 }
 
 async function downloadFavicon() {
@@ -45,12 +46,12 @@ async function downloadFavicon() {
     a.click();
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    alert("Erreur lors du téléchargement du favicon");
-    console.error("Erreur:", error);
+    console.error("Erreur lors du téléchargement du favicon:", error);
+    alert("Erreur lors du téléchargement. Veuillez réessayer.");
   }
 }
 
-async function reset() {
+function reset() {
   document.getElementById("result").innerHTML = "";
   currentFaviconUrl = "";
 }
