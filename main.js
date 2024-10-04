@@ -19,7 +19,7 @@ async function getFavicon() {
 
   const resultDiv = document.getElementById("result");
   resultDiv.innerHTML = `
-        <img src="${currentFaviconUrl}" alt="Favicon">
+        <img src="${currentFaviconUrl}" alt="Favicon" id="faviconImage">
         <div class="result-infos">
           <a href="${currentFaviconUrl}" target="_blank">${currentFaviconUrl}</a>
         </div>
@@ -27,16 +27,21 @@ async function getFavicon() {
     `;
 }
 
-async function downloadFavicon() {
+function downloadFavicon() {
   if (!currentFaviconUrl) {
     alert("Veuillez d'abord récupérer un favicon");
     return;
   }
 
-  try {
-    const response = await fetch(currentFaviconUrl);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+  const img = document.getElementById("faviconImage");
+  const canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.style.display = "none";
     a.href = url;
@@ -44,13 +49,10 @@ async function downloadFavicon() {
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
-  } catch (error) {
-    alert("Erreur lors du téléchargement du favicon");
-    console.error("Erreur:", error);
-  }
+  }, "image/png");
 }
 
-async function reset() {
+function reset() {
   document.getElementById("result").innerHTML = "";
   currentFaviconUrl = "";
 }
